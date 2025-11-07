@@ -4,596 +4,327 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Investment News Analyzer</title>
+    <title>Global Investment & Crisis Analyzer</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-```
-    body {
-        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-        background: #000;
-        color: #fff;
-        line-height: 1.6;
-    }
-
-    .container {
-        max-width: 1400px;
-        margin: 0 auto;
-        padding: 20px;
-    }
-
-    header {
-        text-align: center;
-        padding: 40px 20px;
-        border-bottom: 1px solid #333;
-        margin-bottom: 30px;
-    }
-
-    h1 {
-        font-size: 2.5em;
-        font-weight: 600;
-        margin-bottom: 10px;
-    }
-
-    .tagline {
-        color: #888;
-        font-size: 1.1em;
-    }
-
-    .controls {
-        display: flex;
-        gap: 15px;
-        margin-bottom: 30px;
-        flex-wrap: wrap;
-        align-items: center;
-    }
-
-    .btn {
-        background: #fff;
-        color: #000;
-        border: none;
-        padding: 12px 24px;
-        border-radius: 8px;
-        font-size: 14px;
-        font-weight: 500;
-        cursor: pointer;
-        transition: all 0.2s;
-    }
-
-    .btn:hover {
-        background: #e0e0e0;
-        transform: translateY(-1px);
-    }
-
-    .btn:active {
-        transform: translateY(0);
-    }
-
-    .btn-secondary {
-        background: #222;
-        color: #fff;
-        border: 1px solid #444;
-    }
-
-    .btn-secondary:hover {
-        background: #333;
-    }
-
-    .btn-analyze {
-        background: #0066ff;
-        color: #fff;
-    }
-
-    .btn-analyze:hover {
-        background: #0052cc;
-    }
-
-    .btn-analyze:disabled {
-        background: #333;
-        color: #666;
-        cursor: not-allowed;
-        transform: none;
-    }
-
-    .source-filters {
-        display: flex;
-        gap: 10px;
-        flex-wrap: wrap;
-    }
-
-    .source-tag {
-        background: #222;
-        color: #fff;
-        padding: 8px 16px;
-        border-radius: 20px;
-        font-size: 13px;
-        cursor: pointer;
-        border: 1px solid #444;
-        transition: all 0.2s;
-    }
-
-    .source-tag.active {
-        background: #fff;
-        color: #000;
-        border-color: #fff;
-    }
-
-    .loading {
-        text-align: center;
-        padding: 40px;
-        color: #888;
-    }
-
-    .spinner {
-        border: 3px solid #333;
-        border-top: 3px solid #fff;
-        border-radius: 50%;
-        width: 40px;
-        height: 40px;
-        animation: spin 1s linear infinite;
-        margin: 20px auto;
-    }
-
-    @keyframes spin {
-        0% { transform: rotate(0deg); }
-        100% { transform: rotate(360deg); }
-    }
-
-    .news-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
-        gap: 20px;
-        margin-bottom: 30px;
-    }
-
-    .news-card {
-        background: #111;
-        border: 1px solid #333;
-        border-radius: 12px;
-        padding: 20px;
-        cursor: pointer;
-        transition: all 0.2s;
-        position: relative;
-    }
-
-    .news-card:hover {
-        border-color: #666;
-        transform: translateY(-2px);
-    }
-
-    .news-card.selected {
-        border-color: #0066ff;
-        background: #001a33;
-    }
-
-    .news-card-header {
-        display: flex;
-        justify-content: space-between;
-        align-items: start;
-        margin-bottom: 12px;
-    }
-
-    .source-badge {
-        background: #333;
-        color: #fff;
-        padding: 4px 10px;
-        border-radius: 4px;
-        font-size: 11px;
-        font-weight: 600;
-        text-transform: uppercase;
-    }
-
-    .sentiment {
-        padding: 4px 10px;
-        border-radius: 4px;
-        font-size: 11px;
-        font-weight: 600;
-    }
-
-    .sentiment.negative {
-        background: #ff3333;
-        color: #fff;
-    }
-
-    .sentiment.neutral {
-        background: #666;
-        color: #fff;
-    }
-
-    .sentiment.positive {
-        background: #00cc66;
-        color: #fff;
-    }
-
-    .news-title {
-        font-size: 1.1em;
-        font-weight: 600;
-        margin-bottom: 10px;
-        line-height: 1.4;
-    }
-
-    .news-description {
-        color: #aaa;
-        font-size: 0.95em;
-        margin-bottom: 12px;
-        line-height: 1.5;
-    }
-
-    .news-meta {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        font-size: 0.85em;
-        color: #666;
-        padding-top: 12px;
-        border-top: 1px solid #222;
-    }
-
-    .selection-info {
-        background: #111;
-        border: 1px solid #333;
-        border-radius: 8px;
-        padding: 15px;
-        margin-bottom: 20px;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-    }
-
-    .analysis-panel {
-        background: #111;
-        border: 1px solid #333;
-        border-radius: 12px;
-        padding: 30px;
-        margin-top: 30px;
-        display: none;
-    }
-
-    .analysis-panel.visible {
-        display: block;
-    }
-
-    .analysis-content {
-        color: #ddd;
-        line-height: 1.8;
-        white-space: pre-wrap;
-    }
-
-    .analysis-content h2 {
-        color: #fff;
-        margin-top: 20px;
-        margin-bottom: 10px;
-    }
-
-    .analysis-content h3 {
-        color: #fff;
-        margin-top: 15px;
-        margin-bottom: 8px;
-    }
-
-    .analysis-content strong {
-        color: #fff;
-    }
-
-    .error {
-        background: #330000;
-        border: 1px solid #ff3333;
-        color: #ff6666;
-        padding: 15px;
-        border-radius: 8px;
-        margin-bottom: 20px;
-    }
-
-    .checkbox {
-        width: 20px;
-        height: 20px;
-        position: absolute;
-        top: 20px;
-        right: 20px;
-        pointer-events: none;
-    }
-
-    @media (max-width: 768px) {
-        .news-grid {
-            grid-template-columns: 1fr;
-        }
-
-        .controls {
-            flex-direction: column;
-            align-items: stretch;
-        }
-    }
-</style>
-```
-
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #000; color: #fff; line-height: 1.6; }
+        .container { max-width: 1400px; margin: 0 auto; padding: 20px; }
+        header { text-align: center; padding: 40px 20px; border-bottom: 1px solid #333; margin-bottom: 30px; }
+        h1 { font-size: 2.5em; font-weight: 600; margin-bottom: 10px; }
+        .tagline { color: #888; font-size: 1.1em; }
+        .controls { display: flex; gap: 15px; margin-bottom: 30px; flex-wrap: wrap; align-items: center; }
+        .btn { background: #fff; color: #000; border: none; padding: 12px 24px; border-radius: 8px; font-size: 14px; font-weight: 500; cursor: pointer; transition: all 0.2s; }
+        .btn:hover { background: #e0e0e0; transform: translateY(-1px); }
+        .btn-secondary { background: #222; color: #fff; border: 1px solid #444; }
+        .btn-secondary:hover { background: #333; }
+        .btn-analyze { background: #0066ff; color: #fff; }
+        .btn-analyze:hover { background: #0052cc; }
+        .btn-analyze:disabled { background: #333; color: #666; cursor: not-allowed; transform: none; }
+        .filter-tag { background: #222; color: #fff; padding: 8px 16px; border-radius: 20px; font-size: 13px; cursor: pointer; border: 1px solid #444; transition: all 0.2s; display: inline-block; margin: 5px; }
+        .filter-tag.active { background: #fff; color: #000; border-color: #fff; }
+        .filter-label { color: #888; font-size: 14px; font-weight: 600; margin: 15px 0 10px 0; }
+        .loading { text-align: center; padding: 40px; color: #888; }
+        .spinner { border: 3px solid #333; border-top: 3px solid #fff; border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; margin: 20px auto; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        .news-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(350px, 1fr)); gap: 20px; margin-bottom: 30px; }
+        .news-card { background: #111; border: 1px solid #333; border-radius: 12px; padding: 20px; cursor: pointer; transition: all 0.2s; position: relative; }
+        .news-card:hover { border-color: #666; transform: translateY(-2px); }
+        .news-card.selected { border-color: #0066ff; background: #001a33; }
+        .news-card-header { display: flex; justify-content: space-between; align-items: start; margin-bottom: 12px; flex-wrap: wrap; gap: 8px; }
+        .source-badge { background: #333; color: #fff; padding: 4px 10px; border-radius: 4px; font-size: 11px; font-weight: 600; }
+        .region-badge { background: #1a1a1a; color: #888; padding: 4px 8px; border-radius: 4px; font-size: 10px; font-weight: 600; }
+        .category-badge { padding: 4px 8px; border-radius: 4px; font-size: 10px; font-weight: 600; text-transform: uppercase; }
+        .category-badge.business { background: #0d3d0d; color: #66ff66; }
+        .category-badge.politics { background: #3d0d0d; color: #ff6666; }
+        .category-badge.catastrophe { background: #3d2d0d; color: #ffaa66; }
+        .category-badge.general { background: #1a1a2d; color: #88aaff; }
+        .sentiment { padding: 4px 10px; border-radius: 4px; font-size: 11px; font-weight: 600; }
+        .sentiment.negative { background: #ff3333; color: #fff; }
+        .sentiment.neutral { background: #666; color: #fff; }
+        .sentiment.positive { background: #00cc66; color: #fff; }
+        .news-title { font-size: 1.1em; font-weight: 600; margin-bottom: 10px; line-height: 1.4; }
+        .news-description { color: #aaa; font-size: 0.95em; margin-bottom: 12px; line-height: 1.5; }
+        .news-meta { display: flex; justify-content: space-between; align-items: center; font-size: 0.85em; color: #666; padding-top: 12px; border-top: 1px solid #222; }
+        .analysis-panel { background: #111; border: 1px solid #333; border-radius: 12px; padding: 30px; margin-top: 30px; display: none; }
+        .analysis-panel.visible { display: block; }
+        .analysis-content { color: #ddd; line-height: 1.8; white-space: pre-wrap; }
+        .error { background: #330000; border: 1px solid #ff3333; color: #ff6666; padding: 15px; border-radius: 8px; margin-bottom: 20px; }
+        .info { background: #1a1a1a; border: 1px solid #444; color: #aaa; padding: 15px; border-radius: 8px; margin-bottom: 20px; }
+        .checkbox { width: 24px; height: 24px; position: absolute; top: 20px; right: 20px; pointer-events: none; background: #0066ff; border-radius: 4px; display: flex; align-items: center; justify-content: center; font-size: 16px; }
+        .stats { display: flex; gap: 20px; padding: 15px; background: #111; border: 1px solid #333; border-radius: 8px; margin-bottom: 20px; flex-wrap: wrap; }
+        .stat-item { flex: 1; min-width: 150px; }
+        .stat-label { color: #888; font-size: 12px; text-transform: uppercase; letter-spacing: 0.5px; }
+        .stat-value { color: #fff; font-size: 24px; font-weight: 600; margin-top: 5px; }
+        @media (max-width: 768px) { .news-grid { grid-template-columns: 1fr; } .controls { flex-direction: column; align-items: stretch; } }
+    </style>
 </head>
 <body>
     <div class="container">
         <header>
-            <h1>📈 Investment News Analyzer</h1>
-            <p class="tagline">"Buy when there's blood in the streets"</p>
+            <h1>🌍 Global Investment & Crisis Analyzer</h1>
+            <p class="tagline">"Buy when there's blood in the streets" - Finance, Politics & Catastrophes</p>
         </header>
+        <div class="controls">
+            <button class="btn" onclick="fetchNews()">🔄 Refresh News</button>
+            <button class="btn btn-secondary" onclick="selectAll()">Select All</button>
+            <button class="btn btn-secondary" onclick="clearSelection()">Clear</button>
+            <button class="btn btn-analyze" id="analyzeBtn" onclick="analyzeNews()" disabled>
+                🤖 Analyze (<span id="selectedCount">0</span>)
+            </button>
+        </div>
+        <div class="stats" id="stats" style="display: none;">
+            <div class="stat-item"><div class="stat-label">Total</div><div class="stat-value" id="totalArticles">0</div></div>
+            <div class="stat-item"><div class="stat-label">Negative</div><div class="stat-value" style="color: #ff3333;" id="negativeCount">0</div></div>
+            <div class="stat-item"><div class="stat-label">Middle East</div><div class="stat-value" style="color: #ffaa66;" id="middleEastCount">0</div></div>
+        </div>
+        <div class="filter-label">Category:</div>
+        <div id="categoryFilters"></div>
+        <div class="filter-label">Region:</div>
+        <div id="regionFilters"></div>
+        <div class="filter-label">Source:</div>
+        <div id="sourceFilters"></div>
+        <div id="loading" class="loading" style="display: none;"><div class="spinner"></div><p>Loading news...</p></div>
+        <div id="error"></div>
+        <div id="info"></div>
+        <div class="news-grid" id="newsGrid"></div>
+        <div class="analysis-panel" id="analysisPanel">
+            <h2>🎯 AI Analysis</h2>
+            <div class="analysis-content" id="analysisContent"></div>
+        </div>
+    </div>
+    <script>
+        let articles = [];
+        let selectedArticles = new Set();
+        let activeRegionFilters = new Set();
+        let activeSourceFilters = new Set();
+        let activeCategoryFilters = new Set();
 
 ```
-    <div class="controls">
-        <button class="btn" onclick="fetchNews()">🔄 Refresh News</button>
-        <button class="btn btn-secondary" onclick="selectAll()">Select All</button>
-        <button class="btn btn-secondary" onclick="clearSelection()">Clear Selection</button>
-        <button class="btn btn-analyze" id="analyzeBtn" onclick="analyzeNews()" disabled>
-            🤖 Analyze with AI (<span id="selectedCount">0</span> selected)
-        </button>
-    </div>
-
-    <div class="source-filters" id="sourceFilters"></div>
-
-    <div class="selection-info" id="selectionInfo" style="display: none;">
-        <span id="selectionText"></span>
-    </div>
-
-    <div id="loading" class="loading" style="display: none;">
-        <div class="spinner"></div>
-        <p>Loading financial news...</p>
-    </div>
-
-    <div id="error"></div>
-
-    <div class="news-grid" id="newsGrid"></div>
-
-    <div class="analysis-panel" id="analysisPanel">
-        <h2>🎯 AI Investment Analysis</h2>
-        <div class="analysis-content" id="analysisContent"></div>
-    </div>
-</div>
-
-<script>
-    let articles = [];
-    let selectedArticles = new Set();
-    let activeFilters = new Set();
-
-    // RSS feeds for financial news
-    const RSS_FEEDS = [
-        { name: 'MarketWatch', url: 'https://www.marketwatch.com/rss/topstories' },
-        { name: 'Reuters Business', url: 'https://www.reutersagency.com/feed/?taxonomy=best-topics&post_type=best' },
-        { name: 'CNBC', url: 'https://www.cnbc.com/id/100003114/device/rss/rss.html' },
-        { name: 'Bloomberg', url: 'https://www.bloomberg.com/feed/podcast/etf-report.xml' },
-        { name: 'WSJ Markets', url: 'https://feeds.a.dj.com/rss/RSSMarketsMain.xml' },
-        { name: 'Financial Times', url: 'https://www.ft.com/?format=rss' },
-        { name: 'Yahoo Finance', url: 'https://finance.yahoo.com/rss/' },
-        { name: 'Seeking Alpha', url: 'https://seekingalpha.com/feed.xml' }
-    ];
-
-    // Initialize
-    window.onload = function() {
-        fetchNews();
-    };
+    window.onload = () => fetchNews();
 
     async function fetchNews() {
         const loading = document.getElementById('loading');
         const newsGrid = document.getElementById('newsGrid');
         const errorDiv = document.getElementById('error');
-        
+        const infoDiv = document.getElementById('info');
         loading.style.display = 'block';
         newsGrid.innerHTML = '';
         errorDiv.innerHTML = '';
+        infoDiv.innerHTML = '';
         articles = [];
+        selectedArticles.clear();
+        updateSelection();
 
         try {
-            // Use RSS2JSON service to parse feeds
-            const promises = RSS_FEEDS.map(feed => 
-                fetch(`https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(feed.url)}`)
-                    .then(res => res.json())
-                    .then(data => ({
-                        source: feed.name,
-                        items: data.items || []
-                    }))
-                    .catch(err => ({ source: feed.name, items: [] }))
-            );
-
-            const results = await Promise.all(promises);
+            const apiKey = '135343e9c78e4f719251ad61bb43b7b8';
+            const countries = ['us', 'cn', 'jp', 'de', 'in', 'gb', 'fr', 'it', 'br', 'ca', 'kr', 'es', 'au', 'mx', 'ru', 'ae', 'sa', 'il', 'tr', 'eg'];
+            const categories = ['business', 'general'];
+            const promises = [];
             
-            // Combine all articles
-            results.forEach(result => {
-                result.items.forEach(item => {
-                    articles.push({
-                        title: item.title,
-                        description: item.description?.replace(/<[^>]*>/g, '').substring(0, 200) + '...' || '',
-                        link: item.link,
-                        source: result.source,
-                        pubDate: item.pubDate,
-                        sentiment: analyzeSentiment(item.title + ' ' + (item.description || ''))
-                    });
+            countries.forEach(country => {
+                categories.forEach(category => {
+                    promises.push(
+                        fetch(`https://newsapi.org/v2/top-headlines?country=${country}&category=${category}&pageSize=20&apiKey=${apiKey}`)
+                            .then(res => res.json())
+                            .then(data => ({country, category, articles: data.articles || []}))
+                            .catch(() => ({country, category, articles: []}))
+                    );
                 });
             });
 
-            // Sort by date
-            articles.sort((a, b) => new Date(b.pubDate) - new Date(a.pubDate));
-
-            // Create source filters
-            createSourceFilters();
+            const results = await Promise.all(promises);
+            let hasData = false;
             
-            // Display articles
-            displayArticles();
+            results.forEach(result => {
+                if (result.articles && result.articles.length > 0) {
+                    hasData = true;
+                    result.articles.forEach(article => {
+                        if (!article.title || article.title.includes('[Removed]')) return;
+                        const region = getRegion(result.country);
+                        const category = categorizeArticle(article, result.category);
+                        articles.push({
+                            title: article.title,
+                            description: article.description || article.content?.substring(0, 200) || 'No description',
+                            link: article.url,
+                            source: article.source?.name || 'Unknown',
+                            region,
+                            country: result.country.toUpperCase(),
+                            category,
+                            pubDate: article.publishedAt,
+                            sentiment: analyzeSentiment(article.title + ' ' + (article.description || ''))
+                        });
+                    });
+                }
+            });
 
+            if (!hasData) {
+                errorDiv.innerHTML = '<div class="error">No data from API. Check your connection.</div>';
+                return;
+            }
+
+            const seen = new Set();
+            articles = articles.filter(a => {
+                const key = a.title.toLowerCase();
+                if (seen.has(key)) return false;
+                seen.add(key);
+                return true;
+            });
+
+            articles.sort((a, b) => new Date(b.pubDate) - new Date(a.pubDate));
+            infoDiv.innerHTML = `<div class="info">✅ Loaded ${articles.length} articles from ${countries.length} countries</div>`;
+            updateStats();
+            createFilters();
+            displayArticles();
         } catch (error) {
-            errorDiv.innerHTML = `<div class="error">Error loading news: ${error.message}. Try refreshing the page.</div>`;
+            errorDiv.innerHTML = `<div class="error">Error: ${error.message}</div>`;
         } finally {
             loading.style.display = 'none';
         }
     }
 
+    function getRegion(c) {
+        const map = {us:'USA',cn:'China',jp:'Japan',de:'Germany',in:'India',gb:'UK',fr:'France',it:'Italy',br:'Brazil',ca:'Canada',kr:'S. Korea',es:'Spain',au:'Australia',mx:'Mexico',ru:'Russia',ae:'Middle East (UAE)',sa:'Middle East (Saudi)',il:'Middle East (Israel)',tr:'Middle East (Turkey)',eg:'Middle East (Egypt)'};
+        return map[c.toLowerCase()] || c.toUpperCase();
+    }
+
+    function categorizeArticle(article, apiCategory) {
+        const text = ((article.title || '') + ' ' + (article.description || '')).toLowerCase();
+        const catastropheWords = ['earthquake','tsunami','hurricane','flood','fire','disaster','storm','explosion','crash','emergency','casualties','death','volcano'];
+        const politicsWords = ['election','president','minister','parliament','congress','government','vote','political','senate','diplomacy','sanction'];
+        if (catastropheWords.some(w => text.includes(w))) return 'catastrophe';
+        if (politicsWords.some(w => text.includes(w))) return 'politics';
+        if (apiCategory === 'business') return 'business';
+        return 'general';
+    }
+
     function analyzeSentiment(text) {
-        const negative = ['crash', 'fall', 'drop', 'decline', 'loss', 'bear', 'recession', 'crisis', 'tumble', 'plunge', 'worry', 'fear', 'risk'];
-        const positive = ['rise', 'gain', 'surge', 'rally', 'bull', 'growth', 'profit', 'boom', 'soar', 'jump'];
-        
-        const lowerText = text.toLowerCase();
-        const negCount = negative.filter(word => lowerText.includes(word)).length;
-        const posCount = positive.filter(word => lowerText.includes(word)).length;
-        
-        if (negCount > posCount) return 'negative';
-        if (posCount > negCount) return 'positive';
-        return 'neutral';
+        const neg = ['crash','fall','drop','decline','loss','recession','crisis','tumble','fear','risk','warning','disaster','death','attack','war'];
+        const pos = ['rise','gain','surge','rally','growth','profit','boom','soar','optimism','record','recover'];
+        const t = text.toLowerCase();
+        const negCount = neg.filter(w => t.includes(w)).length;
+        const posCount = pos.filter(w => t.includes(w)).length;
+        return negCount > posCount ? 'negative' : posCount > negCount ? 'positive' : 'neutral';
     }
 
-    function createSourceFilters() {
-        const sources = [...new Set(articles.map(a => a.source))];
-        const filterDiv = document.getElementById('sourceFilters');
-        
-        filterDiv.innerHTML = sources.map(source => 
-            `<div class="source-tag" onclick="toggleFilter('${source}')">${source}</div>`
-        ).join('');
+    function updateStats() {
+        document.getElementById('stats').style.display = 'flex';
+        document.getElementById('totalArticles').textContent = articles.length;
+        document.getElementById('negativeCount').textContent = articles.filter(a => a.sentiment === 'negative').length;
+        document.getElementById('middleEastCount').textContent = articles.filter(a => a.region.includes('Middle East')).length;
+    }
+    function createFilters() {
+        const categories = [...new Set(articles.map(a => a.category))].sort();
+        const regions = [...new Set(articles.map(a => a.region))].sort();
+        const sources = [...new Set(articles.map(a => a.source))].sort();
+        document.getElementById('categoryFilters').innerHTML = categories.map(c => `<span class="filter-tag" onclick="toggleCategoryFilter('${c}')">${c}</span>`).join('');
+        document.getElementById('regionFilters').innerHTML = regions.map(r => `<span class="filter-tag" onclick="toggleRegionFilter('${r.replace(/'/g, "\\'")}')">${r}</span>`).join('');
+        document.getElementById('sourceFilters').innerHTML = sources.slice(0,40).map(s => `<span class="filter-tag" onclick="toggleSourceFilter('${s.replace(/'/g, "\\'")}')">${s}</span>`).join('');
     }
 
-    function toggleFilter(source) {
-        if (activeFilters.has(source)) {
-            activeFilters.delete(source);
-        } else {
-            activeFilters.add(source);
-        }
-        
-        // Update UI
-        document.querySelectorAll('.source-tag').forEach(tag => {
-            if (tag.textContent === source) {
-                tag.classList.toggle('active');
-            }
-        });
-        
-        displayArticles();
+    function toggleCategoryFilter(c) { activeCategoryFilters.has(c) ? activeCategoryFilters.delete(c) : activeCategoryFilters.add(c); updateFilterUI(); displayArticles(); }
+    function toggleRegionFilter(r) { activeRegionFilters.has(r) ? activeRegionFilters.delete(r) : activeRegionFilters.add(r); updateFilterUI(); displayArticles(); }
+    function toggleSourceFilter(s) { activeSourceFilters.has(s) ? activeSourceFilters.delete(s) : activeSourceFilters.add(s); updateFilterUI(); displayArticles(); }
+
+    function updateFilterUI() {
+        document.querySelectorAll('#categoryFilters .filter-tag').forEach(t => t.classList.toggle('active', activeCategoryFilters.has(t.textContent)));
+        document.querySelectorAll('#regionFilters .filter-tag').forEach(t => t.classList.toggle('active', activeRegionFilters.has(t.textContent)));
+        document.querySelectorAll('#sourceFilters .filter-tag').forEach(t => t.classList.toggle('active', activeSourceFilters.has(t.textContent)));
     }
 
     function displayArticles() {
-        const newsGrid = document.getElementById('newsGrid');
-        const filteredArticles = activeFilters.size > 0 
-            ? articles.filter(a => activeFilters.has(a.source))
-            : articles;
-
-        if (filteredArticles.length === 0) {
-            newsGrid.innerHTML = '<p style="grid-column: 1/-1; text-align: center; color: #666;">No articles found. Try different filters or refresh.</p>';
-            return;
-        }
-
-        newsGrid.innerHTML = filteredArticles.slice(0, 50).map((article, index) => `
-            <div class="news-card ${selectedArticles.has(index) ? 'selected' : ''}" onclick="toggleArticle(${index})">
+        let filtered = articles;
+        if (activeCategoryFilters.size > 0) filtered = filtered.filter(a => activeCategoryFilters.has(a.category));
+        if (activeRegionFilters.size > 0) filtered = filtered.filter(a => activeRegionFilters.has(a.region));
+        if (activeSourceFilters.size > 0) filtered = filtered.filter(a => activeSourceFilters.has(a.source));
+        
+        const grid = document.getElementById('newsGrid');
+        if (filtered.length === 0) { grid.innerHTML = '<p style="grid-column:1/-1;text-align:center;color:#666;padding:40px;">No matches</p>'; return; }
+        
+        grid.innerHTML = filtered.slice(0, 150).map(a => {
+            const idx = articles.indexOf(a);
+            return `<div class="news-card ${selectedArticles.has(idx)?'selected':''}" onclick="toggleArticle(${idx})">
                 <div class="news-card-header">
-                    <span class="source-badge">${article.source}</span>
-                    <span class="sentiment ${article.sentiment}">${article.sentiment}</span>
+                    <div style="display:flex;gap:8px;flex-wrap:wrap;">
+                        <span class="source-badge">${a.source}</span>
+                        <span class="region-badge">${a.region}</span>
+                        <span class="category-badge ${a.category}">${a.category}</span>
+                    </div>
+                    <span class="sentiment ${a.sentiment}">${a.sentiment}</span>
                 </div>
-                <div class="news-title">${article.title}</div>
-                <div class="news-description">${article.description}</div>
+                <div class="news-title">${a.title}</div>
+                <div class="news-description">${a.description}</div>
                 <div class="news-meta">
-                    <span>${new Date(article.pubDate).toLocaleDateString()}</span>
-                    <a href="${article.link}" target="_blank" onclick="event.stopPropagation()" style="color: #0066ff;">Read →</a>
+                    <span>${new Date(a.pubDate).toLocaleDateString()}</span>
+                    <a href="${a.link}" target="_blank" onclick="event.stopPropagation()" style="color:#0066ff;">Read →</a>
                 </div>
-                ${selectedArticles.has(index) ? '<div class="checkbox">✓</div>' : ''}
-            </div>
-        `).join('');
+                ${selectedArticles.has(idx)?'<div class="checkbox">✓</div>':''}
+            </div>`;
+        }).join('');
     }
 
-    function toggleArticle(index) {
-        if (selectedArticles.has(index)) {
-            selectedArticles.delete(index);
-        } else {
-            selectedArticles.add(index);
-        }
-        
-        updateSelection();
-        displayArticles();
-    }
-
+    function toggleArticle(idx) { selectedArticles.has(idx) ? selectedArticles.delete(idx) : selectedArticles.add(idx); updateSelection(); displayArticles(); }
+    
     function selectAll() {
-        const filteredArticles = activeFilters.size > 0 
-            ? articles.map((a, i) => ({ article: a, index: i })).filter(({ article }) => activeFilters.has(article.source))
-            : articles.map((a, i) => ({ article: a, index: i }));
-        
-        filteredArticles.slice(0, 50).forEach(({ index }) => selectedArticles.add(index));
-        updateSelection();
-        displayArticles();
+        let filtered = articles;
+        if (activeCategoryFilters.size > 0) filtered = filtered.filter(a => activeCategoryFilters.has(a.category));
+        if (activeRegionFilters.size > 0) filtered = filtered.filter(a => activeRegionFilters.has(a.region));
+        if (activeSourceFilters.size > 0) filtered = filtered.filter(a => activeSourceFilters.has(a.source));
+        filtered.slice(0,150).forEach(a => selectedArticles.add(articles.indexOf(a)));
+        updateSelection(); displayArticles();
     }
 
-    function clearSelection() {
-        selectedArticles.clear();
-        updateSelection();
-        displayArticles();
+    function clearSelection() { selectedArticles.clear(); updateSelection(); displayArticles(); }
+    function updateSelection() { 
+        document.getElementById('selectedCount').textContent = selectedArticles.size;
+        document.getElementById('analyzeBtn').disabled = selectedArticles.size === 0;
     }
-
-    function updateSelection() {
-        const count = selectedArticles.size;
-        document.getElementById('selectedCount').textContent = count;
-        document.getElementById('analyzeBtn').disabled = count === 0;
-    }
-
     async function analyzeNews() {
-        const analysisPanel = document.getElementById('analysisPanel');
-        const analysisContent = document.getElementById('analysisContent');
-        
-        analysisPanel.classList.add('visible');
-        analysisContent.innerHTML = '<div class="loading"><div class="spinner"></div><p>Analyzing selected articles with AI...</p></div>';
-        
-        // Scroll to analysis
-        analysisPanel.scrollIntoView({ behavior: 'smooth' });
+        const panel = document.getElementById('analysisPanel');
+        const content = document.getElementById('analysisContent');
+        panel.classList.add('visible');
+        content.innerHTML = '<div class="loading"><div class="spinner"></div><p>Analyzing...</p></div>';
+        panel.scrollIntoView({behavior:'smooth'});
 
-        // Prepare articles for analysis
-        const selectedArticleData = Array.from(selectedArticles).map(index => {
-            const article = articles[index];
-            return `[${article.source}] ${article.title}\n${article.description}\nSentiment: ${article.sentiment}\nLink: ${article.link}`;
+        const data = Array.from(selectedArticles).map(i => {
+            const a = articles[i];
+            return `[${a.region}] [${a.category}] ${a.source}: ${a.title}\n${a.description}\nSentiment: ${a.sentiment}`;
         }).join('\n\n---\n\n');
 
-        const prompt = `You are an expert investment analyst. Analyze these news articles and provide actionable investment insights based on the "buy when there's blood in the streets" contrarian investing strategy.
+        const prompt = `You are an expert investment analyst specializing in crisis investing. Analyze these news articles covering business, politics, and catastrophes to provide actionable investment insights based on the "buy when there's blood in the streets" contrarian investing strategy.
 ```
 
 News Articles:
-${selectedArticleData}
+${data}
 
-Please provide:
+Provide:
 
-1. **Market Sentiment Overview**: What’s the overall mood in these articles? Fear? Greed? Uncertainty?
-1. **Contrarian Opportunities**: Based on the Baron Rothschild principle of buying when there’s blood in the streets, what specific opportunities do you see?
-1. **Sectors/Assets to Watch**: Which sectors or specific assets might be oversold or undervalued based on this news?
-1. **Risk Assessment**: What are the main risks to be aware of?
-1. **Actionable Recommendations**: Give 3-5 specific, practical investment ideas with reasoning.
+1. **Global Situation**: Key themes across regions?
+1. **Market Sentiment**: Fear? Greed? Regional differences?
+1. **Contrarian Opportunities**: Specific investment opportunities from crises, political instability, oversold markets
+1. **Sector/Asset Analysis**: Which are oversold/undervalued? Which benefit from current events?
+1. **Middle East Focus**: Investment implications?
+1. **Risk Assessment**: Short-term vs long-term risks
+1. **Actionable Recommendations**: 5-7 specific ideas with asset/thesis/risk/timeframe
 
-Be direct, specific, and focus on actionable insights. Consider both short-term trading opportunities and long-term value plays.`;
+Be specific and actionable. Focus on crisis-driven opportunities.`;
 
 ```
         try {
-            const response = await fetch("https://api.anthropic.com/v1/messages", {
+            const res = await fetch("https://api.anthropic.com/v1/messages", {
                 method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
+                headers: {"Content-Type": "application/json"},
                 body: JSON.stringify({
                     model: "claude-sonnet-4-20250514",
                     max_tokens: 4000,
-                    messages: [
-                        { role: "user", content: prompt }
-                    ]
+                    messages: [{role: "user", content: prompt}]
                 })
             });
-
-            if (!response.ok) {
-                throw new Error(`API error: ${response.status}`);
-            }
-
-            const data = await response.json();
-            const analysis = data.content[0].text;
-            
-            // Format the response
-            analysisContent.innerHTML = formatAnalysis(analysis);
-            
+            if (!res.ok) throw new Error(`API error: ${res.status}`);
+            const result = await res.json();
+            content.innerHTML = result.content[0].text.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>').replace(/\n\n/g, '<br><br>');
         } catch (error) {
-            analysisContent.innerHTML = `<div class="error">Error analyzing news: ${error.message}. Make sure you have a valid API connection.</div>`;
+            content.innerHTML = `<div class="error">Error: ${error.message}</div>`;
         }
-    }
-
-    function formatAnalysis(text) {
-        // Simple formatting for better readability
-        return text
-            .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
-            .replace(/\n\n/g, '<br><br>')
-            .replace(/^(\d+\.\s.*?)$/gm, '<strong>$1</strong>');
     }
 </script>
 ```
